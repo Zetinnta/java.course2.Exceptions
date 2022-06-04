@@ -6,33 +6,33 @@ import ru.skypro.exceptions.WrongPasswordException;
 public class Main {
 
     public static void main(String[] args) {
-        String[] userData = {"java_skypro_Shatoshi", "plusUltra_1000", "plusUltra_1000"}; //login, password, confirmPassword
-        checkUser(userData);
+        String login = "java_skypro_Shatoshi";
+        String password = "plusUltra_1000";
+        String confirmPassword = "plusUltra_1000";
+
+        System.out.println(checkUser(login, password, confirmPassword));
     }
 
-    public static void checkUser(String[] data) {
-        boolean congrats = true;
-        String login = data[0];
-        String password = data[1];
-        String confirmPassword = data[2];
+    public static boolean checkUser(String login, String password, String confirmPassword) {
         try {
             checkUserData(login, password, confirmPassword);
         } catch (WrongLoginOrPasswordException exception) {
             System.out.println("Login/Password should only contain letters, numbers or underscores and also have less than (or even) 20 characters.");
-            congrats = false;
+            return false;
         } catch (WrongPasswordException exception) {
-            System.out.println("Passwords should match and only then you are can proceed.");
-            congrats = false;
+            System.out.println("Passwords should match and only then you can proceed.");
+            return false;
         } finally {
-            System.out.println("Verification completed. Result: " + "'" + congrats + "'.");
+            System.out.println("Verification completed.");
         }
+        return true;
     }
 
     public static void checkUserData(String login, String password, String confirmPassword) throws WrongLoginOrPasswordException, WrongPasswordException {
-        if (!(isValid(login) && login.length() >= 1 && login.length() <= 20)) {
+        if (!(isValid(login))) {
             throw new WrongLoginOrPasswordException();
         }
-        if (!(isValid(password) && password.length() >= 1 && password.length() <= 20)) {
+        if (!(isValid(password))) {
             throw new WrongLoginOrPasswordException();
         }
         if (!password.equals(confirmPassword)) {
@@ -41,14 +41,7 @@ public class Main {
     }
 
     public static boolean isValid(String line) {
-        if (line == null) {
-            return false;
-        }
-        for (int i = 0; i < line.length(); i++) {
-            if (!(Character.isLetterOrDigit(line.charAt(i)) || line.charAt(i) == '_')) {
-                return false;
-            }
-        }
-        return true;
+        return (line != null && line.matches("[a-zA-Z0-9_]+") && line.length() >= 1 && line.length() <= 20);
     }
 }
+
